@@ -10,7 +10,7 @@ let player = {
   y: 200,
   w: 10,
   h: 80,
-  speed: 6
+  speed: 9
 };
 
 // Paddle Bot Right
@@ -19,7 +19,7 @@ let bot = {
   y: 200,
   w: 10,
   h: 80,
-  speed: 4
+  speed: 9
 };
 
 // Ball
@@ -28,7 +28,7 @@ let ball = {
   y: 250,
   vx: 4,
   vy: 3,
-  r: 8
+  r: 10
 };
 
 // Controls
