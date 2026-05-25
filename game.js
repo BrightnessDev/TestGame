@@ -1,8 +1,13 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-canvas.width = 800;
-canvas.height = 500;
+function resize() {
+  canvas.width = window.innerWidth * 0.9;
+  canvas.height = window.innerHeight * 0.8;
+}
+
+window.addEventListener("resize", resize);
+resize();
 
 // Paddle Player Left
 let player = {
