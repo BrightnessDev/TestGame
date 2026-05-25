@@ -23,7 +23,7 @@ let player = {
   y: 200,
   w: 10,
   h: 80,
-  speed: 6
+  speed: 9
 };
 
 let bot = {
@@ -31,7 +31,7 @@ let bot = {
   y: 200,
   w: 10,
   h: 80,
-  speed: 4
+  speed: 9
 };
 
 // Ball
@@ -83,7 +83,7 @@ function moveBall() {
     ball.vy *= -1;
   }
 
-  // 🧍 player collision (prevents sticking)
+  // player collision (prevents sticking)
   if (
     ball.x - ball.r <= player.x + player.w &&
     ball.y >= player.y &&
