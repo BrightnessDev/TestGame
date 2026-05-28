@@ -4,6 +4,11 @@ const ctx = canvas.getContext("2d");
 console.log("Game loaded");
 
 // =========================
+// COLOR (ALL SAME)
+// =========================
+const COLOR = "#b450ff";
+
+// =========================
 // AUDIO
 // =========================
 let audioCtx;
@@ -77,7 +82,7 @@ document.addEventListener("keyup", (e) => (keys[e.key] = false));
 // GRID
 // =========================
 function drawGrid() {
-  ctx.strokeStyle = "rgba(180, 80, 255, 0.15)";
+  ctx.strokeStyle = COLOR;
   ctx.lineWidth = 1;
 
   for (let x = 0; x < canvas.width; x += 40) {
@@ -149,25 +154,28 @@ function moveBall() {
 // DRAW
 // =========================
 function draw() {
-  ctx.fillStyle = "#b450ff";
+  ctx.fillStyle = "#050010";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   drawGrid();
 
-  ctx.fillStyle = "white";
-
+  // paddles
+  ctx.fillStyle = COLOR;
   ctx.fillRect(player.x, player.y, player.w, player.h);
   ctx.fillRect(bot.x, bot.y, bot.w, bot.h);
 
+  // ball
   ctx.beginPath();
   ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+  ctx.fillStyle = COLOR;
   ctx.fill();
 
+  // middle line
   ctx.setLineDash([5, 10]);
   ctx.beginPath();
   ctx.moveTo(canvas.width / 2, 0);
   ctx.lineTo(canvas.width / 2, canvas.height);
-  ctx.strokeStyle = "gray";
+  ctx.strokeStyle = COLOR;
   ctx.stroke();
 }
 
