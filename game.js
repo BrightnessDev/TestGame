@@ -1,12 +1,12 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-console.log("Game loaded");
-
 // =========================
-// COLOR (ALL SAME)
+// COLORS
 // =========================
-const COLOR = "#b450ff";
+const GRID_COLOR = "rgba(180, 80, 255, 0.15)";
+const GAME_COLOR = "#b450ff";
+const BG_COLOR = "#050010";
 
 // =========================
 // AUDIO
@@ -82,7 +82,7 @@ document.addEventListener("keyup", (e) => (keys[e.key] = false));
 // GRID
 // =========================
 function drawGrid() {
-  ctx.strokeStyle = COLOR;
+  ctx.strokeStyle = GRID_COLOR;
   ctx.lineWidth = 1;
 
   for (let x = 0; x < canvas.width; x += 40) {
@@ -121,11 +121,13 @@ function moveBall() {
   ball.x += ball.vx;
   ball.y += ball.vy;
 
+  // wall bounce
   if (ball.y - ball.r <= 0 || ball.y + ball.r >= canvas.height) {
     ball.vy *= -1;
     playSound(300);
   }
 
+  // player hit
   if (
     ball.x - ball.r <= player.x + player.w &&
     ball.y >= player.y &&
@@ -135,6 +137,7 @@ function moveBall() {
     playSound(700);
   }
 
+  // bot hit
   if (
     ball.x + ball.r >= bot.x &&
     ball.y >= bot.y &&
@@ -144,6 +147,7 @@ function moveBall() {
     playSound(700);
   }
 
+  // reset
   if (ball.x < 0 || ball.x > canvas.width) {
     ball.x = canvas.width / 2;
     ball.y = canvas.height / 2;
@@ -154,28 +158,29 @@ function moveBall() {
 // DRAW
 // =========================
 function draw() {
-  ctx.fillStyle = "#050010";
+  // background (ONLY dark)
+  ctx.fillStyle = BG_COLOR;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   drawGrid();
 
   // paddles
-  ctx.fillStyle = COLOR;
+  ctx.fillStyle = GAME_COLOR;
   ctx.fillRect(player.x, player.y, player.w, player.h);
   ctx.fillRect(bot.x, bot.y, bot.w, bot.h);
 
   // ball
   ctx.beginPath();
   ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
-  ctx.fillStyle = COLOR;
+  ctx.fillStyle = GAME_COLOR;
   ctx.fill();
 
-  // middle line
+  // center line
   ctx.setLineDash([5, 10]);
   ctx.beginPath();
   ctx.moveTo(canvas.width / 2, 0);
   ctx.lineTo(canvas.width / 2, canvas.height);
-  ctx.strokeStyle = COLOR;
+  ctx.strokeStyle = GAME_COLOR;
   ctx.stroke();
 }
 
