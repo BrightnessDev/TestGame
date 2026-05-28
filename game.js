@@ -47,9 +47,9 @@ function playSound(freq) {
 // =========================
 // GAME OBJECTS
 // =========================
-let player = { x: 0, y: 0, w: 10, h: 80, speed: 9 };
-let bot = { x: 0, y: 0, w: 10, h: 80, speed: 8 };
-let ball = { x: 0, y: 0, vx: 4, vy: 3, r: 10 };
+let player = { x: 0, y: 0, w: 10, h: 80, speed: 15 };
+let bot = { x: 0, y: 0, w: 10, h: 80, speed: 12 };
+let ball = { x: 0, y: 0, vx: 7, vy: 5, r: 10 };
 
 // =========================
 // RESIZE
