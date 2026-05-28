@@ -84,6 +84,10 @@ function moveBall() {
   // top/bottom bounce
   if (ball.y - ball.r <= 0 || ball.y + ball.r >= canvas.height) {
     ball.vy *= -1;
+
+    // 🔊 wall sound
+    wallSound.currentTime = 0;
+    wallSound.play();
   }
 
   // player collision (prevents sticking)
@@ -94,6 +98,10 @@ function moveBall() {
   ) {
     ball.x = player.x + player.w + ball.r;
     ball.vx *= -1;
+
+    // 🔊 paddle sound
+    hitSound.currentTime = 0;
+    hitSound.play();
   }
 
   // bot collision (prevents sticking)
@@ -104,6 +112,10 @@ function moveBall() {
   ) {
     ball.x = bot.x - ball.r;
     ball.vx *= -1;
+
+    // 🔊 paddle sound
+    hitSound.currentTime = 0;
+    hitSound.play();
   }
 
   // reset
