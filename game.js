@@ -149,7 +149,7 @@ function moveBall() {
 // DRAW
 // =========================
 function draw() {
-  ctx.fillStyle = "#050010";
+  ctx.fillStyle = "#b450ff";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   drawGrid();
