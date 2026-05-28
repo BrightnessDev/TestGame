@@ -54,12 +54,11 @@ let ball = { x: 400, y: 250, vx: 4, vy: 3, r: 10 };
 // 📏 RESIZE
 // =========================
 function resize() {
-  console.log("📏 resize()");
-
-  canvas.width = window.innerWidth * 0.9;
-  canvas.height = window.innerHeight * 0.8;
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 
   bot.x = canvas.width - bot.w;
+}
 
   console.log("Canvas:", canvas.width, canvas.height);
 }
