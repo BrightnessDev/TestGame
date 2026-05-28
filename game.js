@@ -1,18 +1,47 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-const hitSound = new Audio("hit.wav");
-const wallSound = new Audio("wall.wav");
+// 🎮 AUDIO SYSTEM (FIXED – no files needed)
+let audioCtx;
+
+function initAudio() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+}
+
+document.addEventListener("keydown", initAudio);
+document.addEventListener("click", initAudio);
+
+function playSound(freq) {
+  initAudio();
+
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+
+  osc.type = "square";
+  osc.frequency.value = freq;
+
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(
+    0.0001,
+    audioCtx.currentTime + 0.05
+  );
+
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.05);
+}
 
 // Resize function (FIXED)
 function resize() {
   canvas.width = window.innerWidth * 0.9;
   canvas.height = window.innerHeight * 0.8;
 
-  // keep bot glued to right edge
   bot.x = canvas.width - bot.w;
 
-  // optional: keep player in bounds
   if (player.y > canvas.height - player.h) {
     player.y = canvas.height - player.h;
   }
@@ -30,7 +59,7 @@ let player = {
 };
 
 let bot = {
-  x: 0, // will be set in resize()
+  x: 0,
   y: 200,
   w: 10,
   h: 80,
@@ -46,7 +75,6 @@ let ball = {
   r: 10
 };
 
-// run resize once AFTER objects exist
 resize();
 
 // Controls
@@ -60,7 +88,6 @@ function movePlayer() {
   if (keys["ArrowUp"]) player.y -= player.speed;
   if (keys["ArrowDown"]) player.y += player.speed;
 
-  // clamp inside screen
   player.y = Math.max(0, Math.min(canvas.height - player.h, player.y));
 }
 
@@ -72,25 +99,21 @@ function moveBot() {
     bot.y -= bot.speed;
   }
 
-  // clamp
   bot.y = Math.max(0, Math.min(canvas.height - bot.h, bot.y));
 }
 
-// Ball + collision (FIXED)
+// Ball + collision
 function moveBall() {
   ball.x += ball.vx;
   ball.y += ball.vy;
 
-  // top/bottom bounce
+  // wall bounce
   if (ball.y - ball.r <= 0 || ball.y + ball.r >= canvas.height) {
     ball.vy *= -1;
-
-    // 🔊 wall sound
-    wallSound.currentTime = 0;
-    wallSound.play();
+    playSound(300); // 🟦 wall sound
   }
 
-  // player collision (prevents sticking)
+  // player collision
   if (
     ball.x - ball.r <= player.x + player.w &&
     ball.y >= player.y &&
@@ -98,13 +121,10 @@ function moveBall() {
   ) {
     ball.x = player.x + player.w + ball.r;
     ball.vx *= -1;
-
-    // 🔊 paddle sound
-    hitSound.currentTime = 0;
-    hitSound.play();
+    playSound(700); // 🟩 hit sound
   }
 
-  // bot collision (prevents sticking)
+  // bot collision
   if (
     ball.x + ball.r >= bot.x &&
     ball.y >= bot.y &&
@@ -112,10 +132,7 @@ function moveBall() {
   ) {
     ball.x = bot.x - ball.r;
     ball.vx *= -1;
-
-    // 🔊 paddle sound
-    hitSound.currentTime = 0;
-    hitSound.play();
+    playSound(700); // 🟩 hit sound
   }
 
   // reset
@@ -129,17 +146,14 @@ function moveBall() {
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // paddles
   ctx.fillStyle = "white";
   ctx.fillRect(player.x, player.y, player.w, player.h);
   ctx.fillRect(bot.x, bot.y, bot.w, bot.h);
 
-  // ball
   ctx.beginPath();
   ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
   ctx.fill();
 
-  // center line (dynamic FIX)
   ctx.setLineDash([5, 10]);
   ctx.beginPath();
   ctx.moveTo(canvas.width / 2, 0);
@@ -148,7 +162,7 @@ function draw() {
   ctx.stroke();
 }
 
-// Game loop
+// Loop
 function update() {
   movePlayer();
   moveBot();
