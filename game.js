@@ -1,8 +1,8 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-const hitSound = new Audio("sounds/hit.wav");
-const wallSound = new Audio("sounds/wall.wav");
+const hitSound = new Audio("hit.wav");
+const wallSound = new Audio("wall.wav");
 
 // Resize function (FIXED)
 function resize() {
