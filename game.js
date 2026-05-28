@@ -1,7 +1,9 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-// 🎮 AUDIO SYSTEM (FIXED – no files needed)
+// =========================
+// 🎮 AUDIO SYSTEM
+// =========================
 let audioCtx;
 
 function initAudio() {
@@ -35,7 +37,56 @@ function playSound(freq) {
   osc.stop(audioCtx.currentTime + 0.05);
 }
 
-// 🟣 RETRO GRID BACKGROUND
+// =========================
+// 🎮 GAME OBJECTS
+// =========================
+let player = {
+  x: 0,
+  y: 200,
+  w: 10,
+  h: 80,
+  speed: 9
+};
+
+let bot = {
+  x: 0,
+  y: 200,
+  w: 10,
+  h: 80,
+  speed: 9
+};
+
+let ball = {
+  x: 400,
+  y: 250,
+  vx: 4,
+  vy: 3,
+  r: 10
+};
+
+// =========================
+// 📏 RESIZE
+// =========================
+function resize() {
+  canvas.width = window.innerWidth * 0.9;
+  canvas.height = window.innerHeight * 0.8;
+
+  bot.x = canvas.width - bot.w;
+}
+
+window.addEventListener("resize", resize);
+
+// =========================
+// 🎮 INPUT
+// =========================
+let keys = {};
+
+document.addEventListener("keydown", (e) => keys[e.key] = true);
+document.addEventListener("keyup", (e) => keys[e.key] = false);
+
+// =========================
+// 🟣 RETRO GRID
+// =========================
 function drawGrid() {
   ctx.strokeStyle = "rgba(180, 80, 255, 0.15)";
   ctx.lineWidth = 1;
@@ -55,55 +106,9 @@ function drawGrid() {
   }
 }
 
-// Resize function (FIXED)
-function resize() {
-  canvas.width = window.innerWidth * 0.9;
-  canvas.height = window.innerHeight * 0.8;
-
-  bot.x = canvas.width - bot.w;
-
-  if (player.y > canvas.height - player.h) {
-    player.y = canvas.height - player.h;
-  }
-}
-
-window.addEventListener("resize", resize);
-
-// Paddles
-let player = {
-  x: 0,
-  y: 200,
-  w: 10,
-  h: 80,
-  speed: 9
-};
-
-let bot = {
-  x: 0,
-  y: 200,
-  w: 10,
-  h: 80,
-  speed: 9
-};
-
-// Ball
-let ball = {
-  x: 400,
-  y: 250,
-  vx: 4,
-  vy: 3,
-  r: 10
-};
-
-resize();
-
-// Controls
-let keys = {};
-
-document.addEventListener("keydown", (e) => keys[e.key] = true);
-document.addEventListener("keyup", (e) => keys[e.key] = false);
-
-// Player movement
+// =========================
+// 🎮 GAME LOGIC
+// =========================
 function movePlayer() {
   if (keys["ArrowUp"]) player.y -= player.speed;
   if (keys["ArrowDown"]) player.y += player.speed;
@@ -111,7 +116,6 @@ function movePlayer() {
   player.y = Math.max(0, Math.min(canvas.height - player.h, player.y));
 }
 
-// Bot AI
 function moveBot() {
   if (bot.y + bot.h / 2 < ball.y) {
     bot.y += bot.speed;
@@ -122,7 +126,6 @@ function moveBot() {
   bot.y = Math.max(0, Math.min(canvas.height - bot.h, bot.y));
 }
 
-// Ball + collision
 function moveBall() {
   ball.x += ball.vx;
   ball.y += ball.vy;
@@ -133,7 +136,7 @@ function moveBall() {
     playSound(300);
   }
 
-  // player collision
+  // player hit
   if (
     ball.x - ball.r <= player.x + player.w &&
     ball.y >= player.y &&
@@ -144,7 +147,7 @@ function moveBall() {
     playSound(700);
   }
 
-  // bot collision
+  // bot hit
   if (
     ball.x + ball.r >= bot.x &&
     ball.y >= bot.y &&
@@ -162,11 +165,11 @@ function moveBall() {
   }
 }
 
-// Draw
+// =========================
+// 🎨 DRAW
+// =========================
 function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // 🟣 background
+  // background
   ctx.fillStyle = "#050010";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -183,7 +186,7 @@ function draw() {
   ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
   ctx.fill();
 
-  // middle line
+  // center line
   ctx.setLineDash([5, 10]);
   ctx.beginPath();
   ctx.moveTo(canvas.width / 2, 0);
@@ -192,7 +195,9 @@ function draw() {
   ctx.stroke();
 }
 
-// Loop
+// =========================
+// 🔁 GAME LOOP
+// =========================
 function update() {
   movePlayer();
   moveBot();
@@ -202,4 +207,10 @@ function update() {
   requestAnimationFrame(update);
 }
 
-update();
+// =========================
+// 🚀 START GAME PROPERLY
+// =========================
+window.addEventListener("load", () => {
+  resize();
+  update();
+});
