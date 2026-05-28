@@ -1,8 +1,10 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
+console.log("Game loaded");
+
 // =========================
-// 🎮 AUDIO SYSTEM
+// AUDIO
 // =========================
 let audioCtx;
 
@@ -38,34 +40,14 @@ function playSound(freq) {
 }
 
 // =========================
-// 🎮 GAME OBJECTS
+// GAME OBJECTS
 // =========================
-let player = {
-  x: 0,
-  y: 0,
-  w: 10,
-  h: 80,
-  speed: 9
-};
-
-let bot = {
-  x: 0,
-  y: 0,
-  w: 10,
-  h: 80,
-  speed: 8
-};
-
-let ball = {
-  x: 0,
-  y: 0,
-  vx: 4,
-  vy: 3,
-  r: 10
-};
+let player = { x: 0, y: 0, w: 10, h: 80, speed: 9 };
+let bot = { x: 0, y: 0, w: 10, h: 80, speed: 8 };
+let ball = { x: 0, y: 0, vx: 4, vy: 3, r: 10 };
 
 // =========================
-// 📏 RESIZE (FIXED FULLSCREEN + NO OFFSET)
+// RESIZE
 // =========================
 function resize() {
   canvas.width = window.innerWidth;
@@ -84,15 +66,15 @@ function resize() {
 window.addEventListener("resize", resize);
 
 // =========================
-// 🎮 INPUT
+// INPUT
 // =========================
 let keys = {};
 
-document.addEventListener("keydown", (e) => keys[e.key] = true);
-document.addEventListener("keyup", (e) => keys[e.key] = false);
+document.addEventListener("keydown", (e) => (keys[e.key] = true));
+document.addEventListener("keyup", (e) => (keys[e.key] = false));
 
 // =========================
-// 🟣 GRID
+// GRID
 // =========================
 function drawGrid() {
   ctx.strokeStyle = "rgba(180, 80, 255, 0.15)";
@@ -114,7 +96,7 @@ function drawGrid() {
 }
 
 // =========================
-// 🎮 GAME LOGIC
+// GAME LOGIC
 // =========================
 function movePlayer() {
   if (keys["ArrowUp"]) player.y -= player.speed;
@@ -134,13 +116,11 @@ function moveBall() {
   ball.x += ball.vx;
   ball.y += ball.vy;
 
-  // wall bounce
   if (ball.y - ball.r <= 0 || ball.y + ball.r >= canvas.height) {
     ball.vy *= -1;
     playSound(300);
   }
 
-  // player hit
   if (
     ball.x - ball.r <= player.x + player.w &&
     ball.y >= player.y &&
@@ -150,7 +130,6 @@ function moveBall() {
     playSound(700);
   }
 
-  // bot hit
   if (
     ball.x + ball.r >= bot.x &&
     ball.y >= bot.y &&
@@ -160,7 +139,6 @@ function moveBall() {
     playSound(700);
   }
 
-  // reset
   if (ball.x < 0 || ball.x > canvas.width) {
     ball.x = canvas.width / 2;
     ball.y = canvas.height / 2;
@@ -168,7 +146,7 @@ function moveBall() {
 }
 
 // =========================
-// 🎨 DRAW
+// DRAW
 // =========================
 function draw() {
   ctx.fillStyle = "#050010";
@@ -194,7 +172,7 @@ function draw() {
 }
 
 // =========================
-// 🔁 LOOP
+// LOOP
 // =========================
 function update() {
   movePlayer();
@@ -206,7 +184,7 @@ function update() {
 }
 
 // =========================
-// 🚀 START GAME
+// START
 // =========================
 window.addEventListener("load", () => {
   resize();
