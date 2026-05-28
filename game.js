@@ -35,6 +35,26 @@ function playSound(freq) {
   osc.stop(audioCtx.currentTime + 0.05);
 }
 
+// 🟣 RETRO GRID BACKGROUND
+function drawGrid() {
+  ctx.strokeStyle = "rgba(180, 80, 255, 0.15)";
+  ctx.lineWidth = 1;
+
+  for (let x = 0; x < canvas.width; x += 40) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, canvas.height);
+    ctx.stroke();
+  }
+
+  for (let y = 0; y < canvas.height; y += 40) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(canvas.width, y);
+    ctx.stroke();
+  }
+}
+
 // Resize function (FIXED)
 function resize() {
   canvas.width = window.innerWidth * 0.9;
@@ -110,7 +130,7 @@ function moveBall() {
   // wall bounce
   if (ball.y - ball.r <= 0 || ball.y + ball.r >= canvas.height) {
     ball.vy *= -1;
-    playSound(300); // 🟦 wall sound
+    playSound(300);
   }
 
   // player collision
@@ -121,7 +141,7 @@ function moveBall() {
   ) {
     ball.x = player.x + player.w + ball.r;
     ball.vx *= -1;
-    playSound(700); // 🟩 hit sound
+    playSound(700);
   }
 
   // bot collision
@@ -132,7 +152,7 @@ function moveBall() {
   ) {
     ball.x = bot.x - ball.r;
     ball.vx *= -1;
-    playSound(700); // 🟩 hit sound
+    playSound(700);
   }
 
   // reset
@@ -146,14 +166,24 @@ function moveBall() {
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  // 🟣 background
+  ctx.fillStyle = "#050010";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  drawGrid();
+
   ctx.fillStyle = "white";
+
+  // paddles
   ctx.fillRect(player.x, player.y, player.w, player.h);
   ctx.fillRect(bot.x, bot.y, bot.w, bot.h);
 
+  // ball
   ctx.beginPath();
   ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
   ctx.fill();
 
+  // middle line
   ctx.setLineDash([5, 10]);
   ctx.beginPath();
   ctx.moveTo(canvas.width / 2, 0);
