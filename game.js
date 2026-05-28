@@ -4,7 +4,7 @@ const ctx = canvas.getContext("2d");
 // =========================
 // COLORS
 // =========================
-const GRID_COLOR = "rgba(180, 80, 255, 0.90)";
+const GRID_COLOR = "rgba(180, 80, 255, 0.099)";
 const GAME_COLOR = "#b450ff";
 const BG_COLOR = "#050010";
 
